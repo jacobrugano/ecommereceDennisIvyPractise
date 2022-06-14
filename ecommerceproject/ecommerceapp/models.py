@@ -3,9 +3,7 @@ from operator import itemgetter
 from django.db import models
 from django.contrib.auth.models import User
 
-
 # Create your models here.
-
 class Customer(models.Model):
 	user = models.OneToOneField(User, null=True, blank=True, on_delete=models.CASCADE) 
                                      # Related to the User imported
@@ -49,18 +47,19 @@ class Order(models.Model):
 		return str(self.id)   # Return the ID of the order. Its the only way we can identify the order.
                               # Bcos the ID is an integer, we have to add str to change it to a string value.
 	
-		#To get the total value of the order
-	@property # We use the @property decorator so we can access these like attributes.
-	def get_cart_total(self):
-		orderitems = self.orderitem_set.all() #To get the items ordered into that order
-		total = sum([item.get_total for item in orderitems]) # To get the total value using orderitems created above
-		return total
 
-			#To get the total number of items of the order
+#To get the total number of items of the order
 	@property # We use the @property decorator so we can access these like attributes.
 	def get_cart_items(self):
 		orderitems = self.orderitem_set.all()
 		total = sum([item.quantity for item in orderitems]) # To get how many items are in a cart/in an overall order
+		return total
+
+#To get the total value of the order
+	@property # We use the @property decorator so we can access these like attributes.
+	def get_cart_total(self):
+		orderitems = self.orderitem_set.all() #To get the items ordered into that order
+		total = sum([item.get_total for item in orderitems]) # To get the total value using orderitems created above
 		return total
 
 # model for the items that need to be added to the Order
@@ -91,3 +90,4 @@ class ShippingAddress(models.Model):
 
 	def __str__(self):
 		return self.address
+
